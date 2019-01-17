@@ -1,0 +1,10 @@
+
+You can find list of chats in chats.txt
+
+h|help - print help
+ls - print groups
+new|n|create - create group. params: [aliases]
+aa|add-aliases - add aliases to group. params: group alias, [new aliases]
+am|add|add-member - add member to group. params: group alias [members]. member: (part of name|username)|id
+rm|remove|remove-members - remove members from group. params: group alias [members]. member: (part of name|username)|id
+

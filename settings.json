@@ -1,0 +1,13 @@
+{
+    "commands": {
+        "$": "forward",
+        "$#": "send",
+        "/updateChats": "updateChats"
+    },
+    "workChatName": "ShareWithFriendsGroup",
+    "delays": {
+        "sendMessage": 500,
+        "forwardMessages": 1000,
+        "checkMessages": 5000
+    }
+}
