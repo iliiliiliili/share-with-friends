@@ -4,6 +4,11 @@
 ### Run
 ``node main.js``
 
+### Dependencies
+- [telegram-mtproto](https://www.npmjs.com/package/telegram-mtproto/v/2.2.2)
+- [readline-sync](https://www.npmjs.com/package/readline-sync)
+- [mtproto-storage-fs](https://www.npmjs.com/package/mtproto-storage-fs)
+
 ### Configuration
 
 1. Rename ``login-data-example.json`` for ``login-data.json`` and fill your data.
