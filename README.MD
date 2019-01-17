@@ -8,6 +8,7 @@
 - [telegram-mtproto](https://www.npmjs.com/package/telegram-mtproto/v/2.2.2)
 - [readline-sync](https://www.npmjs.com/package/readline-sync)
 - [mtproto-storage-fs](https://www.npmjs.com/package/mtproto-storage-fs)
+    - If you have problems with installing packages to RasberryPi or another PC. You can install them somwhere else and just copy node_modules folder to target PC.  
 
 ### Configuration
 

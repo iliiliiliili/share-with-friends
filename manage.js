@@ -221,7 +221,8 @@ const removeMembers = (targetGroupAlias, members) => {
         saveGroups ();
     }
 
-    console.log ('\x1b[0m', `Added ${removed} members to group: `, targetGroup);
+    console.log ('\x1b[0m', `Removed ${removed} members from group: `,
+        targetGroup);
 };
 
 const printHelp = () => console.log (read ('manage-help.txt'));
