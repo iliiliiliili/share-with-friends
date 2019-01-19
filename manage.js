@@ -6,12 +6,13 @@ const {inspect} = require ('util');
 
 let groups;
 let chats;
-let log = console.log;
+let log;
 let useColors = true;
 
 const loadGroups = () => groups = readAsJson ('groups.json') || [];
 const saveGroups = () => saveAsJson ('groups.json', groups);
-const printFull = (obj) => log (inspect (obj, false, null, useColors));
+const toStringFull = (obj) => inspect (obj, false, null, useColors);
+const printFull = (obj) => log (toStringFull (obj));
 const printGroups = () => printFull (groups);
 
 
@@ -129,25 +130,25 @@ const addMembers = (targetGroupAlias, members) => {
         if (variants.length === 0) {
 
             log (useColors ? '\x1b[31m' : '',
-                `No chat '${member}'`);
+                `No chat '${toStringFull (member)}'`);
         } else if (variants.length === 1) {
 
             if (targetGroup.members.find (member =>
                 member.id === variants [0].id)) {
 
                 log (useColors ? '\x1b[31m' : '',
-                    `'${member}' is already in a group`);
+                    `'${toStringFull (member)}' is already in a group`);
             } else {
 
                 added ++;
                 targetGroup.members.push (variants [0]);
                 log (useColors ? '\x1b[32m' : '',
-                    `Added ${member}: `, variants [0]);
+                    `Added ${toStringFull (member)}: `, variants [0]);
             }
         } else {
 
             log (useColors ? '\x1b[31m' : '',
-                `Too much variants for '${member}': `,
+                `Too much variants for '${toStringFull (member)}': `,
                 variants);
         }
 
@@ -196,16 +197,17 @@ const removeMembers = (targetGroupAlias, members) => {
 
         if (variants.length === 0) {
 
-            log (useColors ? '\x1b[31m' : '', `No chat '${member}'`);
+            log (useColors ? '\x1b[31m' : '',
+                `No chat '${toStringFull (member)}'`);
         } else if (variants.length === 1) {
-
 
             const toRemove = targetGroup.members.find (member =>
                 member.id === variants [0].id);
 
             if (toRemove === undefined) {
 
-                log (useColors ? '\x1b[31m' : '', `Group has no '${member}'`);
+                log (useColors ? '\x1b[31m' : '',
+                    `Group has no '${toStringFull (member)}'`);
             } else {
 
                 removed ++;
@@ -215,7 +217,7 @@ const removeMembers = (targetGroupAlias, members) => {
 
 
                 log (useColors ? '\x1b[32m' : '',
-                    `Removed ${member}: `, variants [0]);
+                    `Removed ${toStringFull (member)}: `, variants [0]);
             }
         } else {
 
@@ -280,7 +282,7 @@ const main = async () => {
 
     console.log ('Loading...');
 
-    await init ();
+    await init (console.log, true);
 
     printGroups ();
     printHelp ();
