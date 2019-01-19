@@ -2,15 +2,9 @@
 
 const readlineSync = require ('readline-sync');
 const telegramClient = require ('./init-telegram-client.js');
-const {loginData, save, saveAsJson, read} = require ('./core.js');
+const {loginData, save, saveAsJson, read, randomInt} = require ('./core.js');
 
-let sendMessageId = 11;
-
-const createSendMessageId = () => {
-
-    sendMessageId = (sendMessageId + 1) % 1000000007;
-    return sendMessageId;
-};
+const createSendMessageId = () => randomInt (11, 8000000007);
 
 const readLine = (prompt) => {
     

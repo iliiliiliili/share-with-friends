@@ -3,6 +3,8 @@ const fs = require ('fs');
 const readlineSync = require ('readline-sync');
 const loginData = require ('./login-data.json');
 
+const randomInt = (minValue, maxValue) =>
+    minValue + Math.floor (Math.random () * (maxValue - minValue));
 const delay = (ms) => new Promise (res => setTimeout (res, ms));
 
 const saveAsJson = (fileName, data) => {
@@ -35,6 +37,13 @@ const readLine = (prompt) => {
 
 const isNumber = (val) => !isNaN (val);
 
+const splitString = (string, size, multiline = true) => {
+
+    const matchAllToken = (multiline === true) ? '[^]' : '.';
+    const re = new RegExp (matchAllToken + '{1,' + size + '}', 'g');
+    return string.match (re);
+};
+
 module.exports = {
 
     save,
@@ -45,4 +54,6 @@ module.exports = {
     readLine,
     isNumber,
     delay,
+    splitString,
+    randomInt,
 };

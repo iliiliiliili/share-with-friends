@@ -6,10 +6,13 @@ const {inspect} = require ('util');
 
 let groups;
 let chats;
+let log = console.log;
+let useColors = true;
 
 const loadGroups = () => groups = readAsJson ('groups.json') || [];
 const saveGroups = () => saveAsJson ('groups.json', groups);
-const printGroups = () => console.log (inspect (groups, false, null, true));
+const printFull = (obj) => log (inspect (obj, false, null, useColors));
+const printGroups = () => printFull (groups);
 
 
 const isUniqueAliases = (aliases) => {
@@ -32,7 +35,7 @@ const createGroup = (aliases) => {
 
     if (aliases.length === 0) {
 
-        console.log ('Aliases expected');
+        log ('Aliases expected');
         return;
     }
 
@@ -46,10 +49,10 @@ const createGroup = (aliases) => {
         });
 
         saveGroups ();
-        console.log ('Created group with aliases: ', aliases);
+        log ('Created group with aliases: ', aliases);
     } else {
 
-        console.log (`Error: alias '${uniqueRes.alias}' ` +
+        log (`Error: alias '${uniqueRes.alias}' ` +
             `is in group: '${uniqueRes.group.aliases}'`);
     }
 };
@@ -58,13 +61,13 @@ const addAliases = (targetGroupAlias, aliases) => {
 
     if (targetGroupAlias === undefined) {
 
-        console.log ('Target group alias expected');
+        log ('Target group alias expected');
         return;
     }
 
     if (aliases.length === 0) {
 
-        console.log ('Aliases expected');
+        log ('Aliases expected');
         return;
     }
 
@@ -73,7 +76,7 @@ const addAliases = (targetGroupAlias, aliases) => {
 
     if (targetGroup === undefined) {
 
-        console.log (`No group with alias: ${targetGroupAlias}`);
+        log (`No group with alias: ${targetGroupAlias}`);
         return;
     }
 
@@ -83,10 +86,10 @@ const addAliases = (targetGroupAlias, aliases) => {
         targetGroup.aliases.push (...aliases);
 
         saveGroups ();
-        console.log ('Added aliases to group: ', targetGroup.aliases);
+        log ('Added aliases to group: ', targetGroup.aliases);
     } else {
 
-        console.log (`Error: alias '${uniqueRes.alias}' ` +
+        log (`Error: alias '${uniqueRes.alias}' ` +
             `is in group: '${uniqueRes.group.aliases}'`);
     }
 };
@@ -95,13 +98,13 @@ const addMembers = (targetGroupAlias, members) => {
 
     if (targetGroupAlias === undefined) {
 
-        console.log ('Target group alias expected');
+        log ('Target group alias expected');
         return;
     }
 
     if (members.length === 0) {
 
-        console.log ('Members expected (name, username, id)');
+        log ('Members expected (name, username, id)');
         return;
     }
 
@@ -110,7 +113,7 @@ const addMembers = (targetGroupAlias, members) => {
 
     if (targetGroup === undefined) {
 
-        console.log (`No group with alias: ${targetGroupAlias}`);
+        log (`No group with alias: ${targetGroupAlias}`);
         return;
     }
     
@@ -125,22 +128,26 @@ const addMembers = (targetGroupAlias, members) => {
 
         if (variants.length === 0) {
 
-            console.log ('\x1b[31m', `No chat '${member}'`);
+            log (useColors ? '\x1b[31m' : '',
+                `No chat '${member}'`);
         } else if (variants.length === 1) {
 
             if (targetGroup.members.find (member =>
                 member.id === variants [0].id)) {
 
-                console.log ('\x1b[31m', `'${member}' is already in a group`);
+                log (useColors ? '\x1b[31m' : '',
+                    `'${member}' is already in a group`);
             } else {
 
                 added ++;
                 targetGroup.members.push (variants [0]);
-                console.log ('\x1b[32m', `Added ${member}: `, variants [0]);
+                log (useColors ? '\x1b[32m' : '',
+                    `Added ${member}: `, variants [0]);
             }
         } else {
 
-            console.log ('\x1b[31m', `Too much variants for '${member}': `,
+            log (useColors ? '\x1b[31m' : '',
+                `Too much variants for '${member}': `,
                 variants);
         }
 
@@ -151,20 +158,21 @@ const addMembers = (targetGroupAlias, members) => {
         saveGroups ();
     }
 
-    console.log ('\x1b[0m', `Added ${added} members to group: `, targetGroup);
+    log (useColors ? '\x1b[0m' : '',
+        `Added ${added} members to group: `, printFull (targetGroup));
 };
 
 const removeMembers = (targetGroupAlias, members) => {
 
     if (targetGroupAlias === undefined) {
 
-        console.log ('Target group alias expected');
+        log ('Target group alias expected');
         return;
     }
 
     if (members.length === 0) {
 
-        console.log ('Members expected (name, username, id)');
+        log ('Members expected (name, username, id)');
         return;
     }
 
@@ -173,7 +181,7 @@ const removeMembers = (targetGroupAlias, members) => {
 
     if (targetGroup === undefined) {
 
-        console.log (`No group with alias: ${targetGroupAlias}`);
+        log (`No group with alias: ${targetGroupAlias}`);
         return;
     }
     
@@ -188,7 +196,7 @@ const removeMembers = (targetGroupAlias, members) => {
 
         if (variants.length === 0) {
 
-            console.log ('\x1b[31m', `No chat '${member}'`);
+            log (useColors ? '\x1b[31m' : '', `No chat '${member}'`);
         } else if (variants.length === 1) {
 
 
@@ -197,7 +205,7 @@ const removeMembers = (targetGroupAlias, members) => {
 
             if (toRemove === undefined) {
 
-                console.log ('\x1b[31m', `Group has no '${member}'`);
+                log (useColors ? '\x1b[31m' : '', `Group has no '${member}'`);
             } else {
 
                 removed ++;
@@ -206,12 +214,13 @@ const removeMembers = (targetGroupAlias, members) => {
                 targetGroup.members.splice (index, 1);
 
 
-                console.log ('\x1b[32m', `Removed ${member}: `, variants [0]);
+                log (useColors ? '\x1b[32m' : '',
+                    `Removed ${member}: `, variants [0]);
             }
         } else {
 
-            console.log ('\x1b[31m', `Too much variants for '${member}': `,
-                variants);
+            log (useColors ? '\x1b[31m' : '',
+                `Too much variants for '${member}': `, variants);
         }
 
     }
@@ -221,58 +230,81 @@ const removeMembers = (targetGroupAlias, members) => {
         saveGroups ();
     }
 
-    console.log ('\x1b[0m', `Removed ${removed} members from group: `,
-        targetGroup);
+    log (useColors ? '\x1b[0m' : '',
+        `Removed ${removed} members from group: `, printFull (targetGroup));
 };
 
-const printHelp = () => console.log (read ('manage-help.txt'));
+const printHelp = () => log (read ('manage-help.txt'));
+
+const process = async (words) => {
+
+    switch (words [0]) {
+
+        case 'h':
+        case 'help':
+            printHelp ();
+            break;
+        case 'ls':
+            printGroups ();
+            break;
+        case 'new':
+        case 'n':
+        case 'create':
+            createGroup (words.slice (1));
+            break;
+        case 'aa':
+        case 'add-aliases':
+            addAliases (words [1], words.slice (2));
+            break;
+        case 'am':
+        case 'add':
+        case 'add-members':
+            addMembers (words [1], words.slice (2));
+            break;
+        case 'rm':
+        case 'remove':
+        case 'remove-members':
+            removeMembers (words [1], words.slice (2));
+    }
+};
+
+const init = async (logger, colors) => {
+
+    log = logger;
+    chats = await telegramClient.getAndSaveChatsData ();
+    useColors = colors;
+    loadGroups ();
+};
 
 const main = async () => {
 
     console.log ('Loading...');
-    chats = await telegramClient.getAndSaveChatsData ();
 
-    loadGroups ();
+    await init ();
+
     printGroups ();
     printHelp ();
+
     let command = readLine ('Command:');
 
     while (command !== 'q') {
 
         const words = command.split (' ');
 
-        switch (words [0]) {
-
-            case 'h':
-            case 'help':
-                printHelp ();
-                break;
-            case 'ls':
-                printGroups ();
-                break;
-            case 'new':
-            case 'n':
-            case 'create':
-                createGroup (words.slice (1));
-                break;
-            case 'aa':
-            case 'add-aliases':
-                addAliases (words [1], words.slice (2));
-                break;
-            case 'am':
-            case 'add':
-            case 'add-members':
-                addMembers (words [1], words.slice (2));
-                break;
-            case 'rm':
-            case 'remove':
-            case 'remove-members':
-                removeMembers (words [1], words.slice (2));
-        }
+        process (words);
 
         command = readLine ('Command:');
     }
 
 };
 
-main ();
+module.exports = {
+
+    init,
+    process,
+};
+
+if (require.main === module) {
+
+    main ();
+}
